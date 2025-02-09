@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PICQS Contact List</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers%20-%20Copy/Photos/PICQS%20favicon.svg" type="image/x-icon">
+
+  <!-- Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+  <style>
+    /* General Styles */
+    body {
+      font-family: "Roboto", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      overflow-x: hidden;
+    }
+
+    /* Parallax Particles Background */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Fixed Search Box */
+    #search-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 32, 39, 0.9);
+      padding: 10px 0;
+      z-index: 10;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #search-box {
+      width: 300px;
+      max-width: 90%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      transition: width 0.3s ease;
+    }
+
+    #search-box::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Content Wrapper */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      padding: 80px 20px 80px;
+    }
+
+    .sticky-note-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    /* Sticky Note */
+    .sticky-note {
+      background: rgba(15, 32, 39, 0.9);
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      border-radius: 15px;
+      padding: 15px;
+      width: 250px;
+      height: 470px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 0 5px rgba(0, 255, 255, 0.2);
+      transform: perspective(800px) rotateX(10deg);
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    .sticky-note:hover {
+      transform: perspective(800px) rotateX(0deg) scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), inset 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    .sticky-note img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .sticky-note h3 {
+      margin: 0 0 5px 0;
+      font-size: 20px;
+      color: #00ffff;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+    }
+
+    .sticky-note .designation {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 15px;
+    }
+
+    .sticky-note p {
+      margin: 5px 0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .sticky-note p i {
+      margin-right: 10px;
+      color: #00ffff;
+    }
+
+    .whatsapp-icon {
+      color: #25d366;
+    }
+
+    .affiliate-list {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style-type: disc;
+      list-style-position: inside;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    #no-results {
+      display: none;
+      font-size: 18px;
+      color: #ffffff;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* Fixed Footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      max-width: 1200px;
+      background: rgba(15, 32, 39, 0.9);
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 10;
+      font-size: 14px;
+      border-radius: 10px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    footer a {
+      color: #00ffff;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0 5px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive Search Box */
+    @media (max-width: 768px) {
+      #search-box {
+        width: 250px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #search-box {
+        width: 200px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Parallax Particles Background -->
+  <div id="particles-js"></div>
+
+  <!-- Fixed Search Box -->
+  <div id="search-container">
+    <input type="text" id="search-box" placeholder="Search for a contact...">
+  </div>
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <div id="no-results">No matching contacts found.</div>
+    <div class="sticky-note-container" id="note-container">
+      <!-- Example Sticky Notes -->     
+      <div class="sticky-note" data-name="Julie Christie Dela Cruz">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Julie%20Christie%20Dela%20Cruz.jpg" alt="Julie Christie Dela Cruz">
+      <h3>Julie Christie Dela Cruz</h3>
+      <div class="designation">Chair & Founder</div>
+      <p><i class="fas fa-phone"></i>(+63) 918-909-2612</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+966) 535 480 784</p>
+      <p><i class="fas fa-envelope"></i>chair.founder@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>MBA</li>
+        <li>Fellow Member - Philippine Institute of Certified Quantity Surveyors (FPICQS)</li>
+        <li>PgDipSurv</li>
+        <li>Fellow Member -Royal Institution of Chartered Surveyors (FRICS)</li>
+        <li>Fellow Member-Australian Institute of Quantity Surveyors (FAIQS) Certified Quantity Surveyor</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Asuncion Lopez">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Asuncion%20Lopez.jpg" alt="Asuncion Lopez">
+      <h3>Asuncion Lopez</h3>
+      <div class="designation">Board of Trustee/National President (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 917-852-7662</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+974) 7783-5573</p>
+      <p><i class="fas fa-envelope"></i>national.president@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>LLM | MBA | MCIArb | ICIOB</li>
+        <li>Member - Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>
+        <li>Member -Royal Institution of Chartered Surveyors (MRICS)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Lilian Castillo Geron">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Lilian%20Castillo%20Geron.jpg" alt="Lilian Castillo Geron">
+      <h3>Lilian Castillo Geron</h3>
+      <div class="designation">Board of Trustee/National President (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+971) 503-760-369</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+971) 503-760-369</p>
+      <p><i class="fas fa-envelope"></i>national.vp@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>MScQS | CCP</li>
+        <li>Member - Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>
+        <li>Member -Royal Institution of Chartered Surveyors (MRICS)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Arlene Joy Paredes">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Arlene%20Joy%20Paredes.jpg" alt="Arlene Joy Paredes">
+      <h3>Arlene Joy Paredes</h3>
+      <div class="designation">Board of Trustee/National Secretary (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+64) 272-798-744</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+64) 272-798-744</p>
+      <p><i class="fas fa-envelope"></i>national.secretary@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Member - Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>
+        <li>Associate Member -Chartered Institute of Arbitrators</li>
+        <li>Member -New Zealand Institute of Quantity Surveyors (MNZIQS)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Clarita Ladica">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Clarita%20Ladica.jpg" alt="Clarita Ladica">
+      <h3>Clarita Ladica</h3>
+      <div class="designation">Board of Trustee/National Treasurer (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+65) 8181-7902</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+65) 8181-7902</p>
+      <p><i class="fas fa-envelope"></i>national.treasurer@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Life Member -Philippine Institute of Civil Engineers</li>
+        <li>ASEAN Engr</li>
+        <li>Member - Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>
+        <li>MAIQS-CQS | AssocRICS | TechSISV</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Diane Mae B. Bauzon">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Diane%20Mae%20B.%20Bauzon.jpg" alt="Diane Mae B. Bauzon">
+      <h3>Diane Mae B. Bauzon</h3>
+      <div class="designation">Board of Trustee/National External Affairs (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+966) 5376-37188</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 915-309-9175</p>
+      <p><i class="fas fa-envelope"></i>national.ext_affairs@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Associate Member -Philippine Institute of Certified Quantity Surveyors (APICQS)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Maresher C. Dela Cruz">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Maresher%20C.%20Dela%20Cruz.jpg" alt="Maresher C. Dela Cruz">
+      <h3>Maresher C. Dela Cruz</h3>
+      <div class="designation">PH-Chapter President (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 960-526-9910</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 960-526-9910</p>
+      <p><i class="fas fa-envelope"></i>picqsphils@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>Member -Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>
+        <li>Associate Member -  Philippine Institute of Arbitrators (PIArb)</li>
+        <li>Member - Philippine Institute of Construction Arbitrators and Mediators (PICAM)</li>
+        <li>Member - Society of Construction Law Philippines (SCLP)</li>
+        <li>Accredited Construction Arbitrator -  Construction Industry  Arbitration Commission (CIAC)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Divina Glino">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Divina%20Glino.jpg" alt="Divina Glino">
+      <h3>Divina Glino</h3>
+      <div class="designation">PH-Chapter Secretary | PICQS Academic Partners Head (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 995-975-6177</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 995-975-6177</p>
+      <p><i class="fas fa-envelope"></i>ph.secretary@picqs.org</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Associate Member -Philippine Institute of Certified Quantity Surveyors (APICQS)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Criselda P. Cabrillos">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Criselda%20P.%20Cabrillos.jpg" alt="Criselda P. Cabrillos">
+      <h3>Criselda P. Cabrillos</h3>
+      <div class="designation">PH-Finance Head (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 917-838-4907</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 917-838-4907</p>
+      <p><i class="fas fa-envelope"></i>c_cabrillos@yahoo.com</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Member -Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>
+        <li>Member -Australian Institute of Quantity Surveyors (AIQS)</li>
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Patrick James Jose">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Patrick%20James%20Jose.jpg" alt="Patrick James Jose">
+      <h3>Patrick James Jose</h3>
+      <div class="designation">PH-Membership Committee Head (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 945-149-2416</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 945-149-2416</p>
+      <p><i class="fas fa-envelope"></i>josepatrickjames011@gmail.com</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Technical Member -Philippine Institute of Certified Quantity Surveyors (TPICQS)</li>        
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Annabelle Ceñir Fausto">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Annabelle%20Cenir%20Fausto.jpg" alt="Annabelle Ceñir Fausto">
+      <h3>Annabelle Ceñir Fausto</h3>
+      <div class="designation">PH-Young QS Group (YQSG) Head (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 917-625-9074</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 927-022-6327</p>
+      <p><i class="fas fa-envelope"></i>acenir027@gmail.com</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Member -Philippine Institute of Certified Quantity Surveyors (MPICQS)</li>        
+      </ul>
+    </div>
+     <div class="sticky-note" data-name="Mary Grace Cadiente">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Mary%20Grace%20Cadiente.jpg" alt="Mary Grace Cadiente">
+      <h3>Mary Grace Cadiente</h3>
+      <div class="designation">PH-CPD Committee Head (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 929-601-5236</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 929-601-5236</p>
+      <p><i class="fas fa-envelope"></i>picqsphils.cpd@gmail.com</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Technical Member -Philippine Institute of Certified Quantity Surveyors (TPICQS)</li> 
+        <li>Quantity Surveyor cum Cost Control Engineer</li>        
+      </ul>
+    </div>
+    <div class="sticky-note" data-name="Ma. Catherine P. Bobis">
+      <img src="file:///C:/Users/edaa9695/OneDrive%20-%20ARCADIS/Desktop/PICQS%20Officers/Photos/Ma.%20Catherine%20P.%20Bobis.jpg" alt="Ma. Catherine P. Bobis">
+      <h3>Ma. Catherine P. Bobis</h3>
+      <div class="designation">PH-P3T Committee Head (2024-2027)</div>
+      <p><i class="fas fa-phone"></i>(+63) 925-309-1818</p>
+      <p><i class="fab fa-whatsapp whatsapp-icon"></i>(+63) 925-309-1818</p>
+      <p><i class="fas fa-envelope"></i>macatherinebobis@gmail.com</p>
+      <ul class="affiliate-list">
+        <li>BSc in Civil Engineering</li>
+        <li>Technical Member -Philippine Institute of Certified Quantity Surveyors (TPICQS)</li>               
+      </ul>
+    </div>
+      <!-- Add more sticky notes as needed -->
+    </div>
+  </div>
+
+  <!-- Fixed Footer -->
+  <footer>
+    <div>&copy; 2025 PICQS All Rights Reserved</div>
+    <div>
+      <a href="#privacy-policy">Privacy Policy</a> | <a href="#terms-of-use">Terms of Use</a>
+    </div>
+    <div>Design by <a href="https://www.linkedin.com/in/angeloeda">TechXplorerX</a></div>
+  </footer>
+
+  <script>
+    // Initialize Particles.js
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 100, density: { enable: true, value_area: 800 } },
+        color: { value: "#00ffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: "#00ffff", opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2 }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: "repulse" }
+        }
+      },
+      retina_detect: true
+    });
+
+    // Search Functionality
+    const searchBox = document.getElementById("search-box");
+    const stickyNotes = document.querySelectorAll(".sticky-note");
+    const noResultsMessage = document.getElementById("no-results");
+
+    searchBox.addEventListener("input", function () {
+      const query = searchBox.value.toLowerCase().trim();
+      let hasResults = false;
+
+      stickyNotes.forEach(note => {
+        const name = note.getAttribute("data-name").toLowerCase();
+        if (name.includes(query)) {
+          note.style.display = "block";
+          hasResults = true;
+        } else {
+          note.style.display = "none";
+        }
+      });
+
+      noResultsMessage.style.display = hasResults ? "none" : "block";
+    });
+  </script>
+</body>
+</html>
